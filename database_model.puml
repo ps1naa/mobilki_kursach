@@ -1,0 +1,52 @@
+@startuml "Логическая модель базы данных - Приложение для доставки продуктов"
+
+' Настройки стиля для UML ER-диаграммы
+skinparam {
+    packageStyle rectangle
+    shadowing false
+    linetype ortho
+    backgroundColor white
+    classBackgroundColor lightyellow
+    classBorderColor black
+    arrowColor black
+}
+
+entity "users" as users {
+    * uid : String <<PK>>
+    --
+    * email : String
+    * role : String
+    * createdAt : DateTime
+}
+
+entity "products" as products {
+    * id : String <<PK>>
+    --
+    * name : String
+    * description : String
+    * price : Decimal
+    * imageUrl : String
+    * category : String
+    * stockQuantity : Integer
+}
+
+entity "orders" as orders {
+    * id : String <<PK>>
+    --
+    * createdAt : DateTime
+    * deliveryTime : String
+    * items : Array
+    ** [i].productId : String <<FK>>
+    ** [i].productName : String
+    ** [i].price : Decimal
+    ** [i].quantity : Integer
+    * status : String
+    * totalAmount : Decimal
+    * userId : String <<FK>>
+}
+
+' Отношения
+users "1" -- "0..*" orders : creates >
+orders ..> products : references >
+
+@enduml 
